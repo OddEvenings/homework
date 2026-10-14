@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Grade 3 Lesson 2.3 Homework</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f4f7fb; --card:#fff; --ink:#1f2a37; --muted:#5b6777; --line:#d6dde6;
+    --brand:#0f766e; --brand-ink:#fff;
+    --ok:#15803d; --ok-bg:#dcfce7; --bad:#b91c1c; --bad-bg:#fee2e2; --warn-bg:#fef9c3; --warn:#854d0e;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:Lexend,system-ui,sans-serif;font-size:21px;line-height:1.55}
+  header{background:var(--brand);color:var(--brand-ink);padding:20px 16px}
+  header .wrap{max-width:860px;margin:0 auto}
+  header h1{margin:0;font-size:1.45em;line-height:1.2}
+  header p{margin:4px 0 0;opacity:.9;font-size:.85em}
+  main{max-width:860px;margin:0 auto;padding:16px}
+  .top{background:var(--card);border-radius:14px;padding:16px;margin-bottom:16px;box-shadow:0 1px 3px rgba(0,0,0,.08);display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center}
+  .top label{font-weight:600}
+  .top input{font:inherit;padding:8px 12px;border:2px solid var(--line);border-radius:10px;min-width:220px}
+  .status{margin-left:auto;font-weight:700;color:var(--muted)}
+  .status.done{color:var(--ok)}
+  .banner{display:none;background:var(--ok-bg);color:var(--ok);border-radius:14px;padding:16px;margin-bottom:16px;font-weight:700;font-size:1.1em;text-align:center}
+  .banner.show{display:block}
+  .banner .big{font-size:1.8em;display:block;line-height:1.2}
+  h2.section{font-size:1.15em;margin:28px 0 10px;color:var(--brand)}
+  .q{background:var(--card);border-radius:14px;padding:18px 16px;margin-bottom:16px;box-shadow:0 1px 3px rgba(0,0,0,.08);border-left:6px solid var(--line);position:relative}
+  .q.right{border-left-color:var(--ok)}
+  .q.wrong{border-left-color:var(--bad)}
+  .mark{display:none;position:absolute;top:14px;right:14px;font-weight:700;border-radius:99px;padding:2px 12px;font-size:.8em}
+  .q.right .mark{display:block;background:var(--ok-bg);color:var(--ok)}
+  .q.wrong .mark{display:block;background:var(--bad-bg);color:var(--bad)}
+  .qhead{display:flex;gap:10px;align-items:baseline;margin-bottom:10px;padding-right:110px}
+  .num{background:var(--ink);color:#fff;border-radius:6px;padding:0 10px;font-weight:700;flex:none}
+  .prompt{font-weight:600}
+  .text{margin:0 0 10px}
+  input.box, select.box{font:inherit;font-size:1em;width:3.6em;padding:4px 6px;border:2px solid var(--line);border-radius:8px;text-align:center}
+  input.box.wide{width:13em;text-align:left}
+  input.box:focus{outline:none;border-color:var(--brand)}
+  input:disabled{background:#f3f4f6;color:var(--ink)}
+  .rows{display:grid;gap:10px;margin-top:10px}
+  .row{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+  .row .lbl{font-weight:700;min-width:5.2em}
+  .eg{color:var(--muted);font-size:.78em}
+  svg.pic{max-width:100%;height:auto;display:block;margin:6px 0 10px}
+  .opts{display:grid;gap:8px}
+  .opt{display:flex;align-items:center;gap:10px;padding:8px 12px;border:2px solid var(--line);border-radius:10px;cursor:pointer}
+  .opt input{width:22px;height:22px}
+  .two{display:grid;gap:16px}
+  @media (min-width:720px){ .two{grid-template-columns:1fr 1fr} }
+  .turnin{background:var(--card);border-radius:14px;padding:20px 16px;box-shadow:0 1px 3px rgba(0,0,0,.08);border-left:6px solid var(--brand);text-align:center}
+  .turnin p{margin:0 0 12px}
+  button.go{font:inherit;font-weight:700;font-size:1.1em;background:var(--brand);color:#fff;border:0;border-radius:12px;padding:12px 28px;cursor:pointer}
+  button.go:disabled{background:#9ca3af;cursor:default}
+  .msg{margin-top:12px;padding:10px 14px;border-radius:10px;font-size:.92em;display:none;text-align:left}
+  .msg.warn{display:block;background:var(--warn-bg);color:var(--warn)}
+  .confirm{display:none;margin-top:14px;padding:14px;border-radius:10px;background:var(--warn-bg);color:var(--warn);text-align:left}
+  .confirm.show{display:block}
+  .confirm .btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+  .confirm button{font:inherit;font-weight:700;border-radius:10px;padding:8px 18px;cursor:pointer;border:2px solid var(--warn)}
+  .confirm .yes{background:var(--warn);color:#fff}
+  .confirm .no{background:#fff;color:var(--warn)}
+  table.sum{width:100%;border-collapse:collapse;font-size:.85em;margin-top:12px;text-align:left}
+  table.sum th, table.sum td{border-bottom:1px solid var(--line);padding:6px 8px}
+  .good{color:var(--ok);font-weight:700} .badc{color:var(--bad);font-weight:700}
+  footer{color:var(--muted);font-size:.75em;text-align:center;padding:20px 16px 40px}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <h1>Lesson 2.3 Homework</h1>
+  <p>Relate Area to Addition and Multiplication · Grade 3</p>
+</div></header>
+
+<main>
+  <div class="top">
+    <div><label for="name">Your name:</label> <input id="name" autocomplete="off" placeholder="Type your full name"></div>
+    <div class="status" id="status">Not turned in yet</div>
+  </div>
+
+  <div class="banner" id="banner"></div>
+
+  <!-- Q1 -->
+  <div class="q" data-id="1">
+    <div class="qhead"><span class="num">1</span><span class="prompt">Use Repeated Reasoning</span></div>
+    <p class="text">Connor is measuring a rectangle picture using unit squares. Each unit square is 1 square inch. So far, he has made <strong>3 rows</strong> with <strong>5 unit squares</strong> in each row. There will be <strong>2 more rows</strong> of 5.</p>
+    <svg class="pic" id="q1pic"></svg>
+    <div class="rows">
+      <div class="row"><span class="lbl">Rows:</span> How many rows will there be in all? <input class="box" data-k="rows" inputmode="numeric" aria-label="rows in all"></div>
+      <div class="row"><span class="lbl">Multiply:</span> <input class="box" data-k="m1" inputmode="numeric" aria-label="factor"> × <input class="box" data-k="m2" inputmode="numeric" aria-label="factor"></div>
+      <div class="row"><span class="lbl">Area =</span> <input class="box" data-k="area" inputmode="numeric" aria-label="area"> square inches</div>
+    </div>
+  </div>
+
+  <h2 class="section">Find the area. Show repeated addition. Show multiplication.</h2>
+
+  <div class="two">
+    <div class="q" data-id="2" style="margin-bottom:0">
+      <div class="qhead"><span class="num">2</span><span class="prompt">Each unit square is 1 square foot.</span></div>
+      <svg class="pic" data-cols="8" data-rows="3"></svg>
+      <div class="rows">
+        <div class="row"><span class="lbl">Add:</span> <input class="box wide" data-k="add" aria-label="repeated addition"></div>
+        <div class="eg">Type it like this: 2 + 2 + 2</div>
+        <div class="row"><span class="lbl">Multiply:</span> <input class="box" data-k="m1" inputmode="numeric" aria-label="factor"> × <input class="box" data-k="m2" inputmode="numeric" aria-label="factor"></div>
+        <div class="row"><span class="lbl">Area =</span> <input class="box" data-k="area" inputmode="numeric" aria-label="area"> square feet</div>
+      </div>
+    </div>
+    <div class="q" data-id="3" style="margin-bottom:0">
+      <div class="qhead"><span class="num">3</span><span class="prompt">Each unit square is 1 square inch.</span></div>
+      <svg class="pic" data-cols="3" data-rows="4"></svg>
+      <div class="rows">
+        <div class="row"><span class="lbl">Add:</span> <input class="box wide" data-k="add" aria-label="repeated addition"></div>
+        <div class="eg">Type it like this: 2 + 2 + 2</div>
+        <div class="row"><span class="lbl">Multiply:</span> <input class="box" data-k="m1" inputmode="numeric" aria-label="factor"> × <input class="box" data-k="m2" inputmode="numeric" aria-label="factor"></div>
+        <div class="row"><span class="lbl">Area =</span> <input class="box" data-k="area" inputmode="numeric" aria-label="area"> square inches</div>
+      </div>
+    </div>
+  </div>
+  <div style="height:16px"></div>
+
+  <!-- Q4 -->
+  <div class="q" data-id="4">
+    <div class="qhead"><span class="num">4</span><span class="prompt">Math on the Spot</span></div>
+    <p class="text">A tile company covers a wall with square tiles. A flower mural is painted in the middle of the wall. The area of each tile is <strong>1 square foot</strong>.</p>
+    <svg class="pic" id="q4pic"></svg>
+    <div class="rows">
+      <div class="row"><span class="lbl">a.</span> What is the area of the <strong>whole wall</strong>? <input class="box" data-k="wall" inputmode="numeric" aria-label="area of whole wall"> square feet</div>
+      <div class="row"><span class="lbl">b.</span> What is the area of the <strong>mural</strong>? <input class="box" data-k="mural" inputmode="numeric" aria-label="area of mural"> square feet</div>
+    </div>
+  </div>
+
+  <h2 class="section">Test Prep</h2>
+
+  <div class="q" data-id="5">
+    <div class="qhead"><span class="num">5</span><span class="prompt">A card is in the shape of the rectangle shown. Each unit square is 1 square inch. Which is the area of the card?</span></div>
+    <svg class="pic" data-cols="4" data-rows="3"></svg>
+    <div class="opts">
+      <label class="opt"><input type="radio" name="q5" value="A" data-k="choice"> A) 12 square inches</label>
+      <label class="opt"><input type="radio" name="q5" value="B" data-k="choice"> B) 7 square inches</label>
+      <label class="opt"><input type="radio" name="q5" value="C" data-k="choice"> C) 4 square inches</label>
+      <label class="opt"><input type="radio" name="q5" value="D" data-k="choice"> D) 3 square inches</label>
+    </div>
+  </div>
+
+  <div class="q" data-id="6">
+    <div class="qhead"><span class="num">6</span><span class="prompt">Binh uses unit squares to measure the area of a playground. Each unit square is 1 square foot. What is the area of the playground?</span></div>
+    <svg class="pic" data-cols="8" data-rows="6"></svg>
+    <div class="row"><span class="lbl">Area =</span> <input class="box" data-k="ans" inputmode="numeric" aria-label="area"> square feet</div>
+  </div>
+
+  <h2 class="section">Spiral Review</h2>
+
+  <div class="q" data-id="7">
+    <div class="qhead"><span class="num">7</span><span class="prompt">Write the unknown factor.</span></div>
+    <div class="row" style="font-size:1.15em">9 × 3 = <input class="box" data-k="ans" inputmode="numeric" aria-label="unknown factor"> × 9</div>
+  </div>
+
+  <div class="q" data-id="8">
+    <div class="qhead"><span class="num">8</span><span class="prompt">Mia measures a bicycle. It is equal to the length of 3 sticks. Each stick is 2 feet long. How long is Mia's bicycle?</span></div>
+    <svg class="pic" id="q8pic"></svg>
+    <div class="row"><input class="box" data-k="ans" inputmode="numeric" aria-label="length"> feet</div>
+  </div>
+
+  <h2 class="section">Turn In</h2>
+  <div class="turnin" id="turnin">
+    <p id="turnin-text">When you have finished every question, check your work. Then turn it in.<br><strong>You can only turn it in once.</strong></p>
+    <button class="go" id="go" type="button">Turn in my homework</button>
+    <div class="msg" id="msg"></div>
+    <div class="confirm" id="confirm">
+      <div id="confirm-text"></div>
+      <div class="btns">
+        <button class="yes" id="yes" type="button">Yes, turn it in</button>
+        <button class="no" id="no" type="button">No, go back</button>
+      </div>
+    </div>
+    <div id="results"></div>
+  </div>
+</main>
+<footer>Your answers save automatically on this device until you turn them in.</footer>
+
+<script>
+/* ===== TEACHER SETUP ===== */
+var SHEET_URL  = 'https://script.google.com/macros/s/AKfycbzErVgsBCr9rPTjm2BgkHqhlG6HXufyAVZy4UGBQ3iv1aDcf8ZLGxAtjqknNYIJrz0UvA/exec';
+var ASSIGNMENT = 'Gr 3 Lesson 2.3 Homework';   // tab name in the Google Sheet
+/* ========================= */
+(function(){
+  var KEY = 'g3-hw-lesson-2-3';
+  var state = null;
+  try { state = JSON.parse(localStorage.getItem(KEY)); } catch(e) {}
+  if (!state || typeof state !== 'object') state = { name:'', vals:{}, submitted:false };
+  if (!state.vals) state.vals = {};
+
+  function V(id){ if(!state.vals[id]) state.vals[id] = {}; return state.vals[id]; }
+  function save(){
+    state.updated = new Date().toISOString();
+    try { localStorage.setItem(KEY, JSON.stringify(state)); } catch(e) {}
+  }
+  function num(s){
+    if (s === undefined || s === null) return NaN;
+    s = String(s).replace(/[,\s]/g,'');
+    return /^\d+$/.test(s) ? parseInt(s,10) : NaN;
+  }
+
+  /* ---------- Pictures ---------- */
+  var CELL = 34;
+  function gridSvg(svg, cols, rows, opt){
+    opt = opt || {};
+    var s='', w=cols*CELL, h=rows*CELL;
+    for (var r=0;r<rows;r++) for (var c=0;c<cols;c++){
+      var dashed = opt.dashedFrom != null && r >= opt.dashedFrom;
+      s+='<rect x="'+(2+c*CELL)+'" y="'+(2+r*CELL)+'" width="'+CELL+'" height="'+CELL+'" fill="'+(dashed?'#fff':(opt.fill||'#e5e7eb'))+'" stroke="#1f2937" stroke-width="'+(dashed?1.5:2)+'"'+(dashed?' stroke-dasharray="5 4"':'')+'/>';
+    }
+    svg.setAttribute('viewBox','0 0 '+(w+4)+' '+(h+4));
+    svg.setAttribute('width', w+4);
+    svg.innerHTML = s;
+  }
+  document.querySelectorAll('svg.pic[data-cols]').forEach(function(svg){ gridSvg(svg, +svg.dataset.cols, +svg.dataset.rows); });
+
+  // Q1: 3 rows made, 2 more rows to come (dashed)
+  (function(){
+    var svg=document.getElementById('q1pic'); gridSvg(svg, 5, 5, {dashedFrom:3, fill:'#ccfbf1'});
+    var h=5*CELL+4, w=5*CELL+4;
+    svg.setAttribute('viewBox','0 0 '+(w+150)+' '+h); svg.setAttribute('width', w+150);
+    svg.innerHTML += '<text x="'+(w+10)+'" y="'+(1.6*CELL)+'" font-size="15" fill="#0f766e" font-family="Lexend,sans-serif">rows made</text>'+
+                     '<text x="'+(w+10)+'" y="'+(4.1*CELL)+'" font-size="15" fill="#5b6777" font-family="Lexend,sans-serif">2 more rows</text>';
+  })();
+
+  // Q4: wall 10 x 5 tiles, mural covers the middle 3 rows
+  (function(){
+    var svg=document.getElementById('q4pic'), cols=10, rows=5, C=36, s='';
+    var w=cols*C, h=rows*C;
+    s+='<rect x="2" y="'+(2+C)+'" width="'+w+'" height="'+(3*C)+'" fill="#bbf7d0"/>';
+    var flowers=[[1.2,2.2],[3.1,3.0],[4.6,1.9],[6.0,2.9],[7.4,2.1],[8.8,3.1],[2.2,3.6],[5.3,3.6],[7.9,3.6]];
+    flowers.forEach(function(f){
+      var cx=2+f[0]*C, cy=2+f[1]*C;
+      s+='<line x1="'+cx+'" y1="'+cy+'" x2="'+cx+'" y2="'+(2+4*C-4)+'" stroke="#15803d" stroke-width="3"/>';
+      for (var i=0;i<8;i++){ var a=i*Math.PI/4; s+='<ellipse cx="'+(cx+Math.cos(a)*11).toFixed(1)+'" cy="'+(cy+Math.sin(a)*11).toFixed(1)+'" rx="7" ry="4.5" transform="rotate('+(i*45)+' '+(cx+Math.cos(a)*11).toFixed(1)+' '+(cy+Math.sin(a)*11).toFixed(1)+')" fill="#facc15"/>'; }
+      s+='<circle cx="'+cx+'" cy="'+cy+'" r="8" fill="#78350f"/>';
+    });
+    for (var r=0;r<rows;r++) for (var c=0;c<cols;c++)
+      s+='<rect x="'+(2+c*C)+'" y="'+(2+r*C)+'" width="'+C+'" height="'+C+'" fill="none" stroke="#475569" stroke-width="1.5"/>';
+    s+='<rect x="2" y="2" width="'+w+'" height="'+h+'" fill="none" stroke="#1f2937" stroke-width="2.5"/>';
+    svg.setAttribute('viewBox','0 0 '+(w+4)+' '+(h+4)); svg.setAttribute('width', w+4);
+    svg.innerHTML=s;
+  })();
+
+  // Q8: three 2-foot sticks end to end
+  (function(){
+    var svg=document.getElementById('q8pic'), L=110, s='';
+    for (var i=0;i<3;i++){
+      s+='<rect x="'+(4+i*L)+'" y="10" width="'+(L-4)+'" height="16" rx="5" fill="#d6a76c" stroke="#7c4a1e" stroke-width="2"/>';
+      s+='<text x="'+(4+i*L+(L-4)/2)+'" y="48" text-anchor="middle" font-size="16" fill="#1f2a37" font-family="Lexend,sans-serif">2 feet</text>';
+    }
+    svg.setAttribute('viewBox','0 0 '+(3*L+8)+' 56'); svg.setAttribute('width', 3*L+8);
+    svg.innerHTML=s;
+  })();
+
+  /* ---------- Answer key (graded only when turned in) ---------- */
+  function factorsOK(v, a, b){ var x=num(v.m1), y=num(v.m2); return (x===a&&y===b)||(x===b&&y===a); }
+  function addOK(str, cols, rows){
+    if (!str) return false;
+    var parts = String(str).split('+').map(function(p){ return p.trim(); });
+    if (parts.some(function(p){ return !/^\d+$/.test(p); })) return false;
+    var n = parts.map(Number), first = n[0];
+    if (!n.every(function(x){ return x===first; })) return false;
+    return (first===cols && n.length===rows) || (first===rows && n.length===cols);
+  }
+  function areaQ(cols, rows){
+    return function(v){ return addOK(v.add, cols, rows) && factorsOK(v, cols, rows) && num(v.area)===cols*rows; };
+  }
+  function single(ans){ return function(v){ return num(v.ans)===ans; }; }
+  var key = {
+    1: function(v){ return num(v.rows)===5 && factorsOK(v,5,5) && num(v.area)===25; },
+    2: areaQ(8,3),
+    3: areaQ(3,4),
+    4: function(v){ return num(v.wall)===50 && num(v.mural)===30; },
+    5: function(v){ return v.choice==='A'; },
+    6: single(48),
+    7: single(3),
+    8: single(6)
+  };
+  var ids = Object.keys(key);
+
+  function answered(id){
+    var v = V(id);
+    return Object.keys(v).some(function(k){ var x=v[k]; return x===true || (typeof x==='string' && x.trim()!==''); });
+  }
+  function grade(){
+    var out = {}, score = 0;
+    ids.forEach(function(id){ var ok = !!key[id](V(id)); out[id] = ok; if (ok) score++; });
+    return {marks: out, score: score};
+  }
+
+  /* ---------- Send to teacher's Google Sheet ---------- */
+  function sendToTeacher(){
+    if (!/^https:\/\/script\.google\.com\//.test(SHEET_URL) || !state.submitted) return;
+    var g = state.result;
+    var payload = {
+      assignment: ASSIGNMENT, name: state.name.trim(), score: g.score, total: ids.length,
+      results: ids.map(function(id){ return { q:+id, correct: !!g.marks[id], tries: answered(id) ? 1 : 0 }; })
+    };
+    try {
+      fetch(SHEET_URL, { method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain;charset=utf-8'}, body: JSON.stringify(payload) })
+        .catch(function(){});
+    } catch(e) {}
+  }
+
+  /* ---------- Wiring inputs ---------- */
+  var nameEl = document.getElementById('name');
+  nameEl.value = state.name || '';
+  nameEl.addEventListener('input', function(){ if (state.submitted) return; state.name = nameEl.value; save(); });
+
+  document.querySelectorAll('.q[data-id]').forEach(function(card){
+    var id = card.dataset.id, v = V(id);
+    var mark = document.createElement('span'); mark.className='mark'; card.appendChild(mark);
+    card.querySelectorAll('[data-k]').forEach(function(el){
+      var k = el.dataset.k;
+      if (el.type==='radio') el.checked = (v[k]===el.value);
+      else el.value = v[k] != null ? v[k] : '';
+      var ev = (el.type==='radio') ? 'change' : 'input';
+      el.addEventListener(ev, function(){
+        if (state.submitted) return;
+        if (el.type==='radio') { if (el.checked) V(id)[k] = el.value; }
+        else V(id)[k] = el.value;
+        save();
+      });
+    });
+  });
+
+  /* ---------- Turn in ---------- */
+  var go = document.getElementById('go'), msg = document.getElementById('msg'),
+      confirmBox = document.getElementById('confirm'), confirmText = document.getElementById('confirm-text');
+
+  go.addEventListener('click', function(){
+    if (state.submitted) return;
+    msg.className='msg';
+    if (!state.name || !state.name.trim()){
+      msg.className='msg warn'; msg.textContent='Type your name at the top of the page first.';
+      nameEl.focus(); window.scrollTo({top:0, behavior:'smooth'}); return;
+    }
+    var blank = ids.filter(function(id){ return !answered(id); });
+    confirmText.innerHTML = blank.length
+      ? '<strong>You did not answer question'+(blank.length>1?'s ':' ')+blank.join(', ')+'.</strong><br>Blank questions will be marked wrong. Turn it in anyway?'
+      : '<strong>Are you sure you are finished?</strong><br>After you turn it in, you cannot change your answers.';
+    confirmBox.classList.add('show');
+  });
+  document.getElementById('no').addEventListener('click', function(){ confirmBox.classList.remove('show'); });
+  document.getElementById('yes').addEventListener('click', function(){
+    if (state.submitted) return;
+    state.result = grade();
+    state.submitted = true;
+    state.submittedAt = new Date().toISOString();
+    save();
+    sendToTeacher();
+    showFinal();
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+
+  function showFinal(){
+    var g = state.result;
+    confirmBox.classList.remove('show');
+    nameEl.disabled = true;
+    document.querySelectorAll('.q[data-id] input').forEach(function(el){ el.disabled = true; });
+    document.querySelectorAll('.q[data-id]').forEach(function(card){
+      var ok = !!g.marks[card.dataset.id];
+      card.classList.add(ok ? 'right' : 'wrong');
+      card.querySelector('.mark').textContent = ok ? '✓ Correct' : '✗ Incorrect';
+    });
+    var when = new Date(state.submittedAt).toLocaleString('en-US',{dateStyle:'medium',timeStyle:'short'});
+    var banner = document.getElementById('banner');
+    banner.innerHTML = '<span class="big">'+g.score+' / '+ids.length+'</span>Turned in by '+escapeHtml(state.name)+' · '+when;
+    banner.classList.add('show');
+    var st = document.getElementById('status'); st.textContent = '✓ Turned in'; st.classList.add('done');
+    go.disabled = true; go.textContent = '✓ Turned in';
+    document.getElementById('turnin-text').innerHTML = 'Your homework has been turned in. Your teacher will go over it with you.';
+    var rows = ids.map(function(id){
+      return '<tr><td>Question '+id+'</td><td>'+(g.marks[id] ? '<span class="good">✓ Correct</span>' : '<span class="badc">✗ Incorrect</span>')+'</td></tr>';
+    }).join('');
+    document.getElementById('results').innerHTML =
+      '<table class="sum"><thead><tr><th>Question</th><th>Result</th></tr></thead><tbody>'+rows+'</tbody></table>';
+  }
+  function escapeHtml(s){ return String(s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+
+  if (state.submitted && state.result){
+    showFinal();
+    sendToTeacher(); // re-send in case the first send failed
+  }
+})();
+</script>
+</body>
+</html>
